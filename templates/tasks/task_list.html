@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Tasks - TaskManager{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/tasks.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-list-check"></i> My Tasks</h2>
+        <a href="{% url 'tasks:create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create New Task
+        </a>
+    </div>
+    
+    <!-- Task Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Total Tasks</h6>
+                    <h3 class="mb-0">{{ total_tasks }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning bg-opacity-10">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Pending</h6>
+                    <h3 class="mb-0 text-warning">{{ pending_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success bg-opacity-10">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Completed</h6>
+                    <h3 class="mb-0 text-success">{{ completed_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="task-filters mb-4">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">All</option>
+                    <option value="pendiente" {% if current_status == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                    <option value="completada" {% if current_status == 'completada' %}selected{% endif %}>Completada</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="priority" class="form-label">Priority</label>
+                <select name="priority" id="priority" class="form-select">
+                    <option value="">All</option>
+                    <option value="alta" {% if current_priority == 'alta' %}selected{% endif %}>Alta</option>
+                    <option value="media" {% if current_priority == 'media' %}selected{% endif %}>Media</option>
+                    <option value="baja" {% if current_priority == 'baja' %}selected{% endif %}>Baja</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="sort" class="form-label">Sort By</label>
+                <select name="sort" id="sort" class="form-select">
+                    <option value="-created_at" {% if current_sort == '-created_at' %}selected{% endif %}>Newest First</option>
+                    <option value="created_at" {% if current_sort == 'created_at' %}selected{% endif %}>Oldest First</option>
+                    <option value="due_date" {% if current_sort == 'due_date' %}selected{% endif %}>Due Date</option>
+                    <option value="priority" {% if current_sort == 'priority' %}selected{% endif %}>Priority</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="bi bi-funnel"></i> Apply Filters
+                </button>
+                <a href="{% url 'tasks:list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Task List -->
+    {% if tasks %}
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Title</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Due Date</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                            <tr class="task-row" onclick="window.location='{% url 'tasks:detail' task.pk %}'">
+                                <td>
+                                    <div class="task-title task-title-truncate">
+                                        {{ task.title }}
+                                    </div>
+                                    {% if task.description %}
+                                        <small class="text-muted">{{ task.description|truncatewords:10 }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge badge-priority-{{ task.priority }}">
+                                        {{ task.get_priority_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-status-{{ task.status }}">
+                                        {{ task.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if task.due_date %}
+                                        {{ task.due_date|date:"Y-m-d" }}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ task.created_at|date:"Y-m-d" }}</td>
+                                <td onclick="event.stopPropagation()">
+                                    <a href="{% url 'tasks:detail' task.pk %}" class="btn btn-sm btn-outline-primary" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'tasks:edit' task.pk %}" class="btn btn-sm btn-outline-secondary" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'tasks:delete' task.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav aria-label="Task pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if current_status %}&status={{ current_status }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        <p class="text-muted text-center mt-3">
+            Showing {{ tasks|length }} of {{ total_tasks }} tasks
+        </p>
+    {% else %}
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <h4 class="mt-3">No tasks found</h4>
+                <p class="text-muted">Create your first task to get started!</p>
+                <a href="{% url 'tasks:create' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create Task
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+name: Deploy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      action:
+        description: 'Terraform action'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+env:
+  TF_VERSION: '1.5.0'
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    name: Terraform ${{ github.event.inputs.action }}
+    defaults:
+      run:
+        working-directory: ./infrastructure
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ env.TF_VERSION }}
+    
+    - name: Terraform Format Check
+      run: terraform fmt -check
+      continue-on-error: true
+    
+    - name: Terraform Init
+      run: terraform init
+    
+    - name: Terraform Validate
+      run: terraform validate
+    
+    - name: Terraform Plan
+      run: terraform plan -var-file=environments/${{ github.event.inputs.environment }}.tfvars -out=tfplan
+    
+    - name: Terraform Apply
+      if: github.event.inputs.action == 'apply'
+      run: terraform apply -auto-approve tfplan
+    
+    - name: Terraform Destroy
+      if: github.event.inputs.action == 'destroy'
+      run: terraform destroy -var-file=environments/${{ github.event.inputs.environment }}.tfvars -auto-approve
+    
+    - name: Save Terraform Outputs
+      if: github.event.inputs.action == 'apply'
+      run: |
+        terraform output -json > terraform-outputs.json
+        cat terraform-outputs.json
+    
+    - name: Upload Terraform Outputs
+      if: github.event.inputs.action == 'apply'
+      uses: actions/upload-artifact@v4
+      with:
+        name: terraform-outputs
+        path: infrastructure/terraform-outputs.json

@@ -1,0 +1,68 @@
+/* Task Management Styles */
+
+/* Task List */
+.task-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.task-row:hover {
+    background-color: #f8f9fa;
+}
+
+.task-title {
+    font-weight: 500;
+    color: #212529;
+}
+
+.task-title-truncate {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Priority Badges */
+.badge-priority-alta {
+    background-color: #dc3545;
+}
+
+.badge-priority-media {
+    background-color: #ffc107;
+}
+
+.badge-priority-baja {
+    background-color: #17a2b8;
+}
+
+/* Status Badges */
+.badge-status-pendiente {
+    background-color: #ffc107;
+}
+
+.badge-status-completada {
+    background-color: #28a745;
+}
+
+/* Task Detail */
+.task-detail-card {
+    margin-top: 20px;
+}
+
+.task-meta {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Filters */
+.task-filters {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 20px;
+}

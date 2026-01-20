@@ -1,0 +1,123 @@
+/* Attachments CSS */
+
+.attachment-list {
+    margin-top: 20px;
+}
+
+.attachment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s;
+}
+
+.attachment-item:hover {
+    background-color: #f8f9fa;
+}
+
+.attachment-info {
+    flex: 1;
+}
+
+.attachment-name {
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 4px;
+}
+
+.attachment-meta {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.attachment-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.file-icon {
+    font-size: 1.5rem;
+    margin-right: 12px;
+}
+
+.file-icon-pdf {
+    color: #dc3545;
+}
+
+.file-icon-word {
+    color: #0d6efd;
+}
+
+.file-icon-excel {
+    color: #198754;
+}
+
+.file-icon-text {
+    color: #6c757d;
+}
+
+.file-icon-image {
+    color: #fd7e14;
+}
+
+.upload-progress {
+    margin-top: 15px;
+}
+
+.attachment-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.attachment-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.attachment-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.attachment-empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.attachment-count-badge {
+    font-size: 0.875rem;
+    padding: 4px 8px;
+}
+
+/* File type specific styles */
+.badge-file-type {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .attachment-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .attachment-actions {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

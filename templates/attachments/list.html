@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Attachments - {{ task.title }} - TaskManager{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Attachments for: {{ task.title }}</h4>
+                    <a href="{% url 'attachments:upload' task.pk %}" class="btn btn-light btn-sm">
+                        <i class="bi bi-upload"></i> Upload New
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if attachments %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Filename</th>
+                                        <th>Size</th>
+                                        <th>Type</th>
+                                        <th>Uploaded</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for attachment in attachments %}
+                                    <tr>
+                                        <td>
+                                            <i class="bi bi-file-earmark"></i>
+                                            {{ attachment.file_name }}
+                                        </td>
+                                        <td>
+                                            {% if attachment.file_size < 1024 %}
+                                                {{ attachment.file_size }} bytes
+                                            {% elif attachment.file_size < 1048576 %}
+                                                {{ attachment.file_size|filesizeformat }}
+                                            {% else %}
+                                                {{ attachment.file_size|filesizeformat }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">
+                                                {{ attachment.content_type|truncatechars:20 }}
+                                            </span>
+                                        </td>
+                                        <td>{{ attachment.created_at|date:"Y-m-d H:i" }}</td>
+                                        <td>
+                                            <a href="{% url 'attachments:download' attachment.pk %}" 
+                                               class="btn btn-sm btn-primary" 
+                                               title="Download">
+                                                <i class="bi bi-download"></i>
+                                            </a>
+                                            <a href="{% url 'attachments:delete' attachment.pk %}" 
+                                               class="btn btn-sm btn-danger" 
+                                               title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>No attachments</strong> - This task doesn't have any files attached yet.
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mt-3">
+                        <a href="{% url 'tasks:detail' task.pk %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Task
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

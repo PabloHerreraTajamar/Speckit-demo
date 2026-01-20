@@ -1,0 +1,17 @@
+# Development Environment Configuration
+
+project_name = "taskmanager"
+environment  = "dev"
+location     = "East US"
+owner        = "platform-team"
+
+# Compute configuration
+app_service_sku = "B1"
+
+# Database configuration  
+database_sku = "B_Standard_B1ms"
+
+# Database admin password
+# IMPORTANT: Replace with secure password or use environment variable
+# Example: export TF_VAR_db_admin_password="YourSecurePassword123!"
+# db_admin_password = "REPLACE_WITH_SECURE_PASSWORD"

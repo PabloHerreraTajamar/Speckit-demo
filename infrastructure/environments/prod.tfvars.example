@@ -1,0 +1,15 @@
+# Production Environment Configuration Template
+# Copy this file to prod.tfvars and update with actual values
+# NEVER commit prod.tfvars to version control
+
+project_name = "taskmanager"
+environment  = "prod"
+location     = "East US"
+owner        = "platform-team"
+cost_center  = ""  # Optional: Add your cost center code
+
+# Compute configuration
+app_service_sku = "S1"  # Production: S1 or P1v2 recommended for better performance
+
+# Database configuration
+database_sku = "GP_Standard_D2s_v3"  # Production: General Purpose tier recommended

@@ -1,0 +1,28 @@
+# Task Manager - Python Dependencies
+
+# Django Framework
+Django==5.0.4
+
+# Environment Variables
+python-dotenv==1.2.1
+
+# Database
+psycopg2-binary==2.9.11
+
+# Testing
+pytest==9.0.2
+pytest-django==4.11.1
+pytest-mock==3.15.1
+factory-boy==3.3.3
+
+# Azure Blob Storage (Feature 003)
+azure-storage-blob==12.19.0
+
+# File Type Detection (Feature 003)
+filetype==1.2.0
+
+# Production Server
+gunicorn==21.2.0
+
+# Code Coverage
+pytest-cov==7.0.0
