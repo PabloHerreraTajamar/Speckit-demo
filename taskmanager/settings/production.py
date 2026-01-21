@@ -11,7 +11,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
 # Security settings for production
-SECURE_SSL_REDIRECT = True  # Force HTTPS
+# Note: SECURE_SSL_REDIRECT is disabled because Azure App Service handles HTTPS at the load balancer
+SECURE_SSL_REDIRECT = False  # Azure handles HTTPS redirect
 SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
