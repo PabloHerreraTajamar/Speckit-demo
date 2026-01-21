@@ -43,12 +43,12 @@ class TaskListView(TaskOwnerMixin, ListView):
 
         # Filter by status
         status = self.request.GET.get("status")
-        if status in ["pendiente", "completada"]:
+        if status in ["pending", "completed"]:
             queryset = queryset.filter(status=status)
 
         # Filter by priority
         priority = self.request.GET.get("priority")
-        if priority in ["alta", "media", "baja"]:
+        if priority in ["high", "medium", "low"]:
             queryset = queryset.filter(priority=priority)
 
         # Sort by parameter
@@ -62,7 +62,7 @@ class TaskListView(TaskOwnerMixin, ListView):
             "-priority",
         ]:
             if sort == "priority":
-                # Custom sort for priority (alta > media > baja)
+                # Custom sort for priority (high > medium > low)
                 queryset = queryset.order_by("priority")
             else:
                 queryset = queryset.order_by(sort)
@@ -81,8 +81,8 @@ class TaskListView(TaskOwnerMixin, ListView):
         # Add task statistics
         all_tasks = Task.objects.filter(owner=self.request.user)
         context["total_tasks"] = all_tasks.count()
-        context["pending_count"] = all_tasks.filter(status="pendiente").count()
-        context["completed_count"] = all_tasks.filter(status="completada").count()
+        context["pending_count"] = all_tasks.filter(status="pending").count()
+        context["completed_count"] = all_tasks.filter(status="completed").count()
 
         return context
 

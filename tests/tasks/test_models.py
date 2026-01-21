@@ -96,7 +96,7 @@ class TestTaskModel:
         """Test __str__ method."""
         task = TaskFactory(title="My Task", status="pending")
 
-        assert str(task) == "My Task (pending)"
+        assert str(task) == "My Task (Pending)"
 
     def test_completed_at_auto_set_on_completion(self):
         """Test that completed_at is auto-set when status changes to completed."""
