@@ -4,6 +4,19 @@
 
 echo "Starting Django application..."
 
+# Install requirements if not already installed
+if [ ! -d "/home/site/wwwroot/.venv" ]; then
+    echo "Creating virtual environment..."
+    python -m venv /home/site/wwwroot/.venv
+fi
+
+echo "Activating virtual environment..."
+source /home/site/wwwroot/.venv/bin/activate
+
+echo "Installing dependencies..."
+pip install --upgrade pip
+pip install -r /home/site/wwwroot/requirements.txt
+
 # Run database migrations
 echo "Running database migrations..."
 python manage.py migrate --noinput
