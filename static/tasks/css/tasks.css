@@ -23,24 +23,24 @@
 }
 
 /* Priority Badges */
-.badge-priority-alta {
+.badge-priority-high {
     background-color: #dc3545;
 }
 
-.badge-priority-media {
+.badge-priority-medium {
     background-color: #ffc107;
 }
 
-.badge-priority-baja {
+.badge-priority-low {
     background-color: #17a2b8;
 }
 
 /* Status Badges */
-.badge-status-pendiente {
+.badge-status-pending {
     background-color: #ffc107;
 }
 
-.badge-status-completada {
+.badge-status-completed {
     background-color: #28a745;
 }
 

@@ -38,6 +38,6 @@ class TaskFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: f"Task {n}")
     description = factory.Faker("paragraph")
     owner = factory.SubFactory(UserFactory)
-    priority = "media"
-    status = "pendiente"
+    priority = "medium"
+    status = "pending"
     due_date = factory.Faker("future_date", end_date="+30d")

@@ -21,8 +21,8 @@ class TestTaskModel:
 
         assert task.title == "Test Task"
         assert task.owner == user
-        assert task.priority == "media"  # Default
-        assert task.status == "pendiente"  # Default
+        assert task.priority == "medium"  # Default
+        assert task.status == "pending"  # Default
         assert task.description == ""
         assert task.due_date is None
         assert task.completed_at is None
@@ -36,15 +36,15 @@ class TestTaskModel:
             title="Complete Project",
             description="Finish the Django project",
             owner=user,
-            priority="alta",
-            status="pendiente",
+            priority="high",
+            status="pending",
             due_date=timezone.now().date(),
         )
 
         assert task.title == "Complete Project"
         assert task.description == "Finish the Django project"
-        assert task.priority == "alta"
-        assert task.status == "pendiente"
+        assert task.priority == "high"
+        assert task.status == "pending"
         assert task.due_date is not None
 
     def test_task_title_validation_empty(self):
@@ -89,34 +89,34 @@ class TestTaskModel:
         """Test default values for priority and status."""
         task = TaskFactory()
 
-        assert task.priority == "media"
-        assert task.status == "pendiente"
+        assert task.priority == "medium"
+        assert task.status == "pending"
 
     def test_task_string_representation(self):
         """Test __str__ method."""
-        task = TaskFactory(title="My Task", status="pendiente")
+        task = TaskFactory(title="My Task", status="pending")
 
-        assert str(task) == "My Task (Pendiente)"
+        assert str(task) == "My Task (pending)"
 
     def test_completed_at_auto_set_on_completion(self):
-        """Test that completed_at is auto-set when status changes to completada."""
-        task = TaskFactory(status="pendiente")
+        """Test that completed_at is auto-set when status changes to completed."""
+        task = TaskFactory(status="pending")
         assert task.completed_at is None
 
-        task.status = "completada"
+        task.status = "completed"
         task.save()
 
         assert task.completed_at is not None
         assert isinstance(task.completed_at, type(timezone.now()))
 
     def test_completed_at_cleared_when_reopened(self):
-        """Test that completed_at is cleared when status changes back to pendiente."""
-        task = TaskFactory(status="completada")
+        """Test that completed_at is cleared when status changes back to pending."""
+        task = TaskFactory(status="completed")
         task.save()  # This should set completed_at
 
         assert task.completed_at is not None
 
-        task.status = "pendiente"
+        task.status = "pending"
         task.save()
 
         assert task.completed_at is None

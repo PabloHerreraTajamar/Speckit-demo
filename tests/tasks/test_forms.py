@@ -18,8 +18,8 @@ class TestTaskForm:
         form_data = {
             "title": "Test Task",
             "description": "Test description",
-            "priority": "alta",
-            "status": "pendiente",
+            "priority": "high",
+            "status": "pending",
             "due_date": timezone.now().date(),
         }
         form = TaskForm(data=form_data)
@@ -30,8 +30,8 @@ class TestTaskForm:
         """Test that title is required."""
         form_data = {
             "description": "Test description",
-            "priority": "media",
-            "status": "pendiente",
+            "priority": "medium",
+            "status": "pending",
         }
         form = TaskForm(data=form_data)
 
@@ -40,14 +40,14 @@ class TestTaskForm:
 
     def test_task_form_empty_title(self):
         """Test that empty/whitespace title is invalid."""
-        form_data = {"title": "   ", "priority": "media", "status": "pendiente"}
+        form_data = {"title": "   ", "priority": "medium", "status": "pending"}
         form = TaskForm(data=form_data)
 
         assert not form.is_valid()
 
     def test_task_form_title_max_length(self):
         """Test that title exceeding 200 chars is invalid."""
-        form_data = {"title": "x" * 201, "priority": "media", "status": "pendiente"}
+        form_data = {"title": "x" * 201, "priority": "medium", "status": "pending"}
         form = TaskForm(data=form_data)
 
         assert not form.is_valid()
@@ -58,8 +58,8 @@ class TestTaskForm:
         form_data = {
             "title": "Test Task",
             "description": "x" * 2001,
-            "priority": "media",
-            "status": "pendiente",
+            "priority": "medium",
+            "status": "pending",
         }
         form = TaskForm(data=form_data)
 
@@ -68,14 +68,14 @@ class TestTaskForm:
 
     def test_task_form_optional_description(self):
         """Test that description is optional."""
-        form_data = {"title": "Test Task", "priority": "media", "status": "pendiente"}
+        form_data = {"title": "Test Task", "priority": "medium", "status": "pending"}
         form = TaskForm(data=form_data)
 
         assert form.is_valid()
 
     def test_task_form_optional_due_date(self):
         """Test that due_date is optional."""
-        form_data = {"title": "Test Task", "priority": "media", "status": "pendiente"}
+        form_data = {"title": "Test Task", "priority": "medium", "status": "pending"}
         form = TaskForm(data=form_data)
 
         assert form.is_valid()
@@ -91,17 +91,17 @@ class TestTaskForm:
         form = TaskForm()
 
         priority_choices = [choice[0] for choice in form.fields["priority"].choices]
-        assert "alta" in priority_choices
-        assert "media" in priority_choices
-        assert "baja" in priority_choices
+        assert "high" in priority_choices
+        assert "medium" in priority_choices
+        assert "low" in priority_choices
 
     def test_task_form_status_choices(self):
         """Test that status has correct choices."""
         form = TaskForm()
 
         status_choices = [choice[0] for choice in form.fields["status"].choices]
-        assert "pendiente" in status_choices
-        assert "completada" in status_choices
+        assert "pending" in status_choices
+        assert "completed" in status_choices
 
     def test_task_form_save(self):
         """Test saving form creates task instance."""
@@ -109,8 +109,8 @@ class TestTaskForm:
         form_data = {
             "title": "Test Task",
             "description": "Test description",
-            "priority": "alta",
-            "status": "pendiente",
+            "priority": "high",
+            "status": "pending",
         }
         form = TaskForm(data=form_data)
 

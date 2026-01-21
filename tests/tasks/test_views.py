@@ -42,8 +42,8 @@ class TestTaskCreateView:
         data = {
             "title": "New Task",
             "description": "Task description",
-            "priority": "alta",
-            "status": "pendiente",
+            "priority": "high",
+            "status": "pending",
         }
         response = client.post(url, data)
 
@@ -60,7 +60,7 @@ class TestTaskCreateView:
         client.login(username=user.email, password="testpass123")
         url = reverse("tasks:create")
 
-        data = {"title": "", "priority": "media", "status": "pendiente"}  # Empty title
+        data = {"title": "", "priority": "medium", "status": "pending"}  # Empty title
         response = client.post(url, data)
 
         assert response.status_code == 200  # Re-render form
@@ -75,7 +75,7 @@ class TestTaskCreateView:
         client.login(username=user.email, password="testpass123")
         url = reverse("tasks:create")
 
-        data = {"title": "Auto Owner Task", "priority": "media", "status": "pendiente"}
+        data = {"title": "Auto Owner Task", "priority": "medium", "status": "pending"}
         response = client.post(url, data)
 
         task = Task.objects.get(title="Auto Owner Task")
@@ -90,8 +90,8 @@ class TestTaskCreateView:
 
         data = {
             "title": "Task with Message",
-            "priority": "media",
-            "status": "pendiente",
+            "priority": "medium",
+            "status": "pending",
         }
         response = client.post(url, data, follow=True)
 
@@ -131,11 +131,11 @@ class TestTaskListView:
     def test_list_view_filter_by_status(self, client):
         """Test filtering tasks by status."""
         user = UserFactory(password="testpass123")
-        task1 = TaskFactory(owner=user, status="pendiente")
-        task2 = TaskFactory(owner=user, status="completada")
+        task1 = TaskFactory(owner=user, status="pending")
+        task2 = TaskFactory(owner=user, status="completed")
 
         client.login(username=user.email, password="testpass123")
-        url = reverse("tasks:list") + "?status=pendiente"
+        url = reverse("tasks:list") + "?status=pending"
         response = client.get(url)
 
         tasks = list(response.context["tasks"])
@@ -145,11 +145,11 @@ class TestTaskListView:
     def test_list_view_filter_by_priority(self, client):
         """Test filtering tasks by priority."""
         user = UserFactory(password="testpass123")
-        task1 = TaskFactory(owner=user, priority="alta")
-        task2 = TaskFactory(owner=user, priority="baja")
+        task1 = TaskFactory(owner=user, priority="high")
+        task2 = TaskFactory(owner=user, priority="low")
 
         client.login(username=user.email, password="testpass123")
-        url = reverse("tasks:list") + "?priority=alta"
+        url = reverse("tasks:list") + "?priority=high"
         response = client.get(url)
 
         tasks = list(response.context["tasks"])
@@ -159,8 +159,8 @@ class TestTaskListView:
     def test_list_view_statistics(self, client):
         """Test that statistics are displayed correctly."""
         user = UserFactory(password="testpass123")
-        TaskFactory.create_batch(3, owner=user, status="pendiente")
-        TaskFactory.create_batch(2, owner=user, status="completada")
+        TaskFactory.create_batch(3, owner=user, status="pending")
+        TaskFactory.create_batch(2, owner=user, status="completed")
 
         client.login(username=user.email, password="testpass123")
         url = reverse("tasks:list")
@@ -267,8 +267,8 @@ class TestTaskUpdateView:
         url = reverse("tasks:edit", kwargs={"pk": task.pk})
         data = {
             "title": "New Title",
-            "priority": "alta",
-            "status": "completada",
+            "priority": "high",
+            "status": "completed",
         }
         response = client.post(url, data)
 
@@ -276,8 +276,8 @@ class TestTaskUpdateView:
 
         task.refresh_from_db()
         assert task.title == "New Title"
-        assert task.priority == "alta"
-        assert task.status == "completada"
+        assert task.priority == "high"
+        assert task.status == "completed"
 
     def test_update_view_denies_other_users(self, client):
         """Test that users cannot edit other users' tasks."""
@@ -300,8 +300,8 @@ class TestTaskUpdateView:
         url = reverse("tasks:edit", kwargs={"pk": task.pk})
         data = {
             "title": "Updated Task",
-            "priority": "media",
-            "status": "pendiente",
+            "priority": "medium",
+            "status": "pending",
         }
         response = client.post(url, data, follow=True)
 

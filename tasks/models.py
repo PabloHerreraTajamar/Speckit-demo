@@ -27,14 +27,14 @@ class Task(models.Model):
     """
 
     PRIORITY_CHOICES = [
-        ("alta", "Alta"),
-        ("media", "Media"),
-        ("baja", "Baja"),
+        ("high", "High"),
+        ("medium", "Medium"),
+        ("low", "Low"),
     ]
 
     STATUS_CHOICES = [
-        ("pendiente", "Pendiente"),
-        ("completada", "Completada"),
+        ("pending", "Pending"),
+        ("completed", "Completed"),
     ]
 
     # Required fields
@@ -61,10 +61,10 @@ class Task(models.Model):
         null=True, blank=True, help_text="Task due date (optional)"
     )
     priority = models.CharField(
-        max_length=10, choices=PRIORITY_CHOICES, default="media", db_index=True
+        max_length=10, choices=PRIORITY_CHOICES, default="medium", db_index=True
     )
     status = models.CharField(
-        max_length=15, choices=STATUS_CHOICES, default="pendiente", db_index=True
+        max_length=15, choices=STATUS_CHOICES, default="pending", db_index=True
     )
 
     # Timestamps
@@ -91,12 +91,12 @@ class Task(models.Model):
         """
         Auto-update completed_at timestamp.
 
-        Sets completed_at when status changes to 'completada'.
-        Clears completed_at when status changes to 'pendiente'.
+        Sets completed_at when status changes to 'completed'.
+        Clears completed_at when status changes to 'pending'.
         """
-        if self.status == "completada" and not self.completed_at:
+        if self.status == "completed" and not self.completed_at:
             self.completed_at = timezone.now()
-        elif self.status == "pendiente":
+        elif self.status == "pending":
             self.completed_at = None
         super().save(*args, **kwargs)
 
