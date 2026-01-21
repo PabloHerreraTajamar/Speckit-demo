@@ -64,7 +64,7 @@ def login_view(request):
     """
     # Redirect if already logged in
     if request.user.is_authenticated:
-        return redirect(request.GET.get("next", "/"))
+        return redirect(request.GET.get("next", "/tasks/"))
 
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -77,8 +77,8 @@ def login_view(request):
 
             messages.success(request, f"Welcome back, {user.email}!")
 
-            # Redirect to 'next' parameter or default to home
-            next_url = request.GET.get("next", "/")
+            # Redirect to 'next' parameter or default to tasks list
+            next_url = request.GET.get("next", "/tasks/")
             return redirect(next_url)
     else:
         form = LoginForm()
